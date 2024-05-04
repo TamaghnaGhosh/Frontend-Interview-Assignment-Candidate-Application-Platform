@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { myHeadersConstant } from "../utils/constant";
+import { URL, myHeadersConstant } from "../utils/constant";
 import axios from "axios";
 import { makeStyles } from "@material-ui/styles";
 import { Grid } from "@material-ui/core";
@@ -15,15 +15,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InfiniteScrollwithFilters = () => {
-  const jobs = useSelector((store) => store?.jobinfo?.jobs);
 
+
+const InfiniteScrollwithFilters = () => {
+  const classes = useStyles();
+  const jobs = useSelector((store) => store?.jobinfo?.jobs);
   const [getData, setGetData] = useState(jobs);
   const [limit, setLimit] = useState(4);
   const [hasMore, setHasMore] = useState(true);
 
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   useEffect(() => {
     fetchGetData();
@@ -42,14 +43,11 @@ const InfiniteScrollwithFilters = () => {
 
   const fetchGetData = async () => {
     try {
-      const info = await axios.post(
-        "https://api.weekday.technology/adhoc/getSampleJdJSON",
-        requestOptions
-      );
-      console.log(
-        "🚀 ~ fetchGetData ~ info?.data?.jdList?.slice(0, limit):",
-        info?.data?.jdList?.slice(0, limit)
-      );
+      const info = await axios.post(URL, requestOptions);
+      // console.log(
+      //   "🚀 ~ fetchGetData ~ info?.data?.jdList?.slice(0, limit):",
+      //   info?.data?.jdList?.slice(0, limit)
+      // );
       setGetData(info?.data?.jdList?.slice(0, limit));
       dispatch(getJobs(info?.data?.jdList));
     } catch (error) {
@@ -60,7 +58,6 @@ const InfiniteScrollwithFilters = () => {
   const FeatchMoreData = () => {
     if (getData?.length < 10) {
       setTimeout(() => {
-        console.log(limit);
         setLimit(limit + 2);
       }, 1500);
     } else {
