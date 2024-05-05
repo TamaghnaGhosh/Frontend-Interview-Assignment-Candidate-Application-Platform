@@ -70,7 +70,9 @@ const FilterInputs = ({ name }) => {
             // defaultValue="TCS"
           />
         </Box>
-      ) : name !== "Min experience" && name !== "Remote/on-site" ? (
+      ) : name !== "Min experience" &&
+        name !== "Remote/on-site" &&
+        name !== "Min base pay" ? (
         <Autocomplete
           multiple
           id="size-small-outlined-outlined"
@@ -83,13 +85,7 @@ const FilterInputs = ({ name }) => {
               : top100Films
           }
           getOptionLabel={(option) => option.title}
-          defaultValue={[
-            name === "Role"
-              ? jobTitle?.[0]
-              : name === "Min base pay"
-              ? minBaseSal?.[0]
-              : top100Films?.[0],
-          ]}
+          defaultValue={[name === "Role" ? jobTitle?.[0] : top100Films?.[0]]}
           isOptionEqualToValue={(option, value) =>
             option.title === value.title && option.year === value.year
           }
@@ -106,14 +102,18 @@ const FilterInputs = ({ name }) => {
               ? minExperience
               : name === "Remote/on-site"
               ? jobType
+              : name === "Min base pay"
+              ? minBaseSal
               : top100Films
           }
-          getOptionLabel={(option) => option.title}
+          getOptionLabel={(option) => option.title.toString()}
           defaultValue={
             name === "Min experience"
               ? minExperience[0]
               : name === "Remote/on-site"
               ? jobType[0]
+              : name === "Min base pay"
+              ? minBaseSal?.[0]
               : top100Films[0]
           }
           renderInput={(params) => (
