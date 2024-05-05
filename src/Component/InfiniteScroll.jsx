@@ -5,8 +5,9 @@ import { makeStyles } from "@material-ui/styles";
 import { Grid } from "@material-ui/core";
 import SimpleCard from "./Card";
 import { useDispatch, useSelector } from "react-redux";
-import { getJobs } from "../utils/Redux/appSlice";
+import { getJobs, getTotalJobs } from "../utils/Redux/appSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FilterInputs from "./FilterInputs";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
@@ -14,8 +15,6 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 20px",
   },
 }));
-
-
 
 const InfiniteScrollwithFilters = () => {
   const classes = useStyles();
@@ -48,8 +47,9 @@ const InfiniteScrollwithFilters = () => {
       //   "🚀 ~ fetchGetData ~ info?.data?.jdList?.slice(0, limit):",
       //   info?.data?.jdList?.slice(0, limit)
       // );
+      dispatch(getTotalJobs(info?.data?.jdList));
       setGetData(info?.data?.jdList?.slice(0, limit));
-      dispatch(getJobs(info?.data?.jdList));
+      dispatch(getJobs(info?.data?.jdList?.slice(0, limit)));
     } catch (error) {
       console.error(error.message);
     }
@@ -64,33 +64,65 @@ const InfiniteScrollwithFilters = () => {
       setHasMore(false);
     }
   };
-  console.log("🚀 ~ FeatchMoreData ~ getData?.length:", getData?.length);
+  console.log("🚀 ~ InfiniteScrollwithFilters ~ getData:", getData);
 
   return (
-    <InfiniteScroll
-      dataLength={getData.length}
-      next={FeatchMoreData}
-      hasMore={hasMore}
-      loader={<h1>loading...</h1>}
-      endMessage={
-        <p style={{ textAlign: "center", fontSize: "50px" }}>
-          you are all set!
-        </p>
-      }
-    >
+    <>
       <Grid
         container
-        spacing={4}
+        spacing={10}
         className={classes.gridContainer}
         justifyContent="center"
       >
-        {getData?.map((item) => (
-          <Grid item xs={12} sm={2} md={6} key={item?.jdUid}>
-            <SimpleCard item={item} />
-          </Grid>
-        ))}
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Min experience"} />
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Company name"} />
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Location"} />
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Remote/on-site"} />
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Tech stack"} />
+        </Grid>
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Role"} />
+        </Grid>
+        <br />
+        <Grid item xs={12} sm={3} md={3}>
+          <FilterInputs name={"Min base pay"} />
+        </Grid>
       </Grid>
-    </InfiniteScroll>
+      <br />
+      <InfiniteScroll
+        dataLength={getData.length}
+        next={FeatchMoreData}
+        hasMore={hasMore}
+        loader={<h1>loading...</h1>}
+        endMessage={
+          <p style={{ textAlign: "center", fontSize: "50px" }}>
+            you are all set!
+          </p>
+        }
+      >
+        <Grid
+          container
+          spacing={4}
+          className={classes.gridContainer}
+          justifyContent="center"
+        >
+          {getData?.map((item) => (
+            <Grid item xs={12} sm={2} md={6} key={item?.jdUid}>
+              <SimpleCard item={item} />
+            </Grid>
+          ))}
+        </Grid>
+      </InfiniteScroll>
+    </>
   );
 };
 
