@@ -1,9 +1,7 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
-import { useState } from "react";
 
 // eslint-disable-next-line react/prop-types
-const FilterInputs = ({ name }) => {
-  const [companyName, setCompanyName] = useState("TCS");
+const FilterInputs = ({ name, handleClick, setCompanyName, companyName }) => {
   const top100Films = [
     { title: "The Shawshank Redemption", year: 1994 },
     { title: "The Godfather", year: 1972 },
@@ -13,41 +11,71 @@ const FilterInputs = ({ name }) => {
     { title: "Schindler's List", year: 1993 },
   ];
   const jobTitle = [
-    { jobid: 1, title: "frontend" },
-    { jobid: 2, title: "backend" },
-    { jobid: 3, title: "tech lead" },
-    { jobid: 4, title: "android" },
-    { jobid: 5, title: "ios" },
+    { jobTitleID: 0, title: "All" },
+    { jobTitleID: 1, title: "frontend" },
+    { jobTitleID: 2, title: "backend" },
+    { jobTitleID: 3, title: "tech lead" },
+    { jobTitleID: 4, title: "android" },
+    { jobTitleID: 5, title: "ios" },
+  ];
+  const jobTechStack = [
+    { jobTechStackId: 0, title: "All" },
+    { jobTechStackId: 1, title: "Java" },
+    { jobTechStackId: 2, title: "GoLang" },
+    { jobTechStackId: 3, title: "C++" },
+    { jobTechStackId: 4, title: "Rubi/Rails" },
+    { jobTechStackId: 5, title: "Kotlin" },
+    { jobTechStackId: 6, title: "C#" },
+    { jobTechStackId: 7, title: "Django" },
+    { jobTechStackId: 8, title: "Javascript" },
+    { jobTechStackId: 9, title: "GrapthQL" },
+    { jobTechStackId: 10, title: "NodeJS" },
+    { jobTechStackId: 11, title: "Typescript" },
+    { jobTechStackId: 12, title: "React" },
+    { jobTechStackId: 13, title: "Rust" },
+    { jobTechStackId: 14, title: "Flask" },
+    { jobTechStackId: 15, title: "Angular" },
   ];
   const jobType = [
-    { jobid: 1, title: "Remote" },
-    { jobid: 2, title: "Hybrid" },
-    { jobid: 3, title: "In-office" },
+    { jobTypeid: 1, title: "All" },
+    { jobTypeid: 1, title: "Remote" },
+    { jobTypeid: 2, title: "Hybrid" },
+    { jobTypeid: 3, title: "In-office" },
   ];
   const minExperience = [
-    { jobid: 1, title: 1 },
-    { jobid: 2, title: 2 },
-    { jobid: 3, title: 3 },
-    { jobid: 4, title: 4 },
-    { jobid: 5, title: 5 },
-    { jobid: 6, title: 6 },
-    { jobid: 7, title: 7 },
-    { jobid: 8, title: 8 },
-    { jobid: 9, title: 9 },
-    { jobid: 10, title: 10 },
-    { jobid: 11, title: 11 },
+    { jobExperience: 0, title: 0 },
+    { jobExperience: 1, title: 1 },
+    { jobExperience: 2, title: 2 },
+    { jobExperience: 3, title: 3 },
+    { jobExperience: 4, title: 4 },
+    { jobExperience: 5, title: 5 },
+    { jobExperience: 6, title: 6 },
+    { jobExperience: 7, title: 7 },
+    { jobExperience: 8, title: 8 },
+    { jobExperience: 9, title: 9 },
+    { jobExperience: 10, title: 10 },
+    { jobExperience: 11, title: 11 },
   ];
   const minBaseSal = [
-    { jobid: 1, title: 10 },
-    { jobid: 2, title: 20 },
-    { jobid: 3, title: 30 },
-    { jobid: 4, title: 40 },
-    { jobid: 5, title: 50 },
-    { jobid: 6, title: 60 },
-    { jobid: 7, title: 70 },
-    { jobid: 8, title: 80 },
-    { jobid: 9, title: 90 },
-    { jobid: 10, title: 100 },
+    { jobMinBaseSal: 0, title: "All" },
+    { jobMinBaseSal: 1, title: 10 },
+    { jobMinBaseSal: 2, title: 20 },
+    { jobMinBaseSal: 3, title: 30 },
+    { jobMinBaseSal: 4, title: 40 },
+    { jobMinBaseSal: 5, title: 50 },
+    { jobMinBaseSal: 6, title: 60 },
+    { jobMinBaseSal: 7, title: 70 },
+    { jobMinBaseSal: 8, title: 80 },
+    { jobMinBaseSal: 9, title: 90 },
+    { jobMinBaseSal: 10, title: 100 },
+  ];
+  const location = [
+    { jobLocationid: 0, title: "All" },
+    { jobLocationid: 1, title: "Kolkata" },
+    { jobLocationid: 2, title: "Bangalore" },
+    { jobLocationid: 3, title: "Mumbai" },
+    { jobLocationid: 4, title: "Delhi ncr" },
+    { jobLocationid: 5, title: "Chennai" },
   ];
 
   return (
@@ -82,13 +110,26 @@ const FilterInputs = ({ name }) => {
               ? jobTitle
               : name === "Min base pay"
               ? minBaseSal
+              : name === "Location"
+              ? location
+              : name === "Tech stack"
+              ? jobTechStack
               : top100Films
           }
           getOptionLabel={(option) => option.title}
-          defaultValue={[name === "Role" ? jobTitle?.[0] : top100Films?.[0]]}
+          defaultValue={[
+            name === "Role"
+              ? jobTitle?.[0]
+              : name === "Location"
+              ? location[0]
+              : name === "Tech stack"
+              ? jobTechStack?.[0]
+              : top100Films?.[0],
+          ]}
           isOptionEqualToValue={(option, value) =>
             option.title === value.title && option.year === value.year
           }
+          onChange={(event, value) => handleClick(value)}
           renderInput={(params) => (
             <TextField {...params} label={name} placeholder={name} />
           )}
@@ -116,6 +157,7 @@ const FilterInputs = ({ name }) => {
               ? minBaseSal?.[0]
               : top100Films[0]
           }
+          onChange={(event, value) => handleClick(value)}
           renderInput={(params) => (
             <TextField {...params} label={name} placeholder={name} />
           )}

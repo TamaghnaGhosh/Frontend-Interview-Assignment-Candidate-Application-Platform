@@ -18,10 +18,13 @@ const useStyles = makeStyles((theme) => ({
 
 const InfiniteScrollwithFilters = () => {
   const classes = useStyles();
+  const jobsTotal = useSelector((store) => store?.jobinfo?.jobsTotal);
   const jobs = useSelector((store) => store?.jobinfo?.jobs);
   const [getData, setGetData] = useState(jobs);
   const [limit, setLimit] = useState(4);
   const [hasMore, setHasMore] = useState(true);
+  const [companyName, setCompanyName] = useState("");
+  const [minExpOfTheCandadate, setMinExpOfTheCandadate] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -64,7 +67,79 @@ const InfiniteScrollwithFilters = () => {
       setHasMore(false);
     }
   };
+
+  const handleClick = (value) => {
+    console.log("🚀 ~ handleClick ~ value:", value);
+    const arrToObj = { ...value };
+    console.log("🚀 ~ handleClick ~ arrToObj:", arrToObj);
+    // if (value?.["jobExperience"] || value?.["jobTypeid"]) {
+
+    // } else {
+    //   console.log("🚀 ~ InfiniteScrollwithFilters ~ companyName:", companyName);
+    //   const scroll = value?.map((info) =>
+    //     jobsTotal?.filter((job) => ((job?.jobRole === info?.title && job?.minExp === minExpOfTheCandadate)))
+    //   );
+    //   console.log("🚀 ~ scroll ~ scroll:", scroll?.flat(Infinity));
+    // }
+    if (value?.jobExperience) {
+      setMinExpOfTheCandadate(value?.title);
+      const fiterBaseOntheExp = jobsTotal?.filter(
+        (job) => job?.minExp === value?.title
+      );
+      console.log("🚀 ~ handleClick ~ fiterBaseOntheExp:", fiterBaseOntheExp);
+    }
+    if (arrToObj?.[0]?.jobLocationid) {
+      const fiterBaseOntheJobLocation = value?.map((info) =>
+        jobsTotal?.filter(
+          (job) => job?.location.toLowerCase() === info?.title.toLowerCase()
+        )
+      );
+      console.log(
+        "🚀 ~ fiterBaseOntheJobLocation ~ fiterBaseOntheJobLocation:",
+        fiterBaseOntheJobLocation?.flat(Infinity)
+      );
+    }
+    if (arrToObj?.[0]?.jobTypeid) {
+      const fiterBaseOntheJobType = jobsTotal?.filter(
+        (job) => job?.location.toLowerCase() === value?.title.toLowerCase()
+      );
+      console.log(
+        "🚀 ~ handleClick ~ fiterBaseOntheJobType:",
+        fiterBaseOntheJobType
+      );
+    }
+    // if(value?.["jobTechStackId"]){
+    //   const filterBaseOnTechStackExperience = value?.map((info) =>jobsTotal?.filter((job) => job?.jobRole === info?.title));
+    //   console.log("🚀 ~ filterBaseOnTechStackExperience ~ filterBaseOnTechStackExperience:", filterBaseOnTechStackExperience?.flat(Infinity));
+    // }
+    if (arrToObj?.[0]?.jobTitleID) {
+      const filterBaseOnTechStackExperience = value?.map((info) =>
+        jobsTotal?.filter((job) => job?.jobRole === info?.title)
+      );
+      console.log(
+        "🚀 ~ filterBaseOnTechStackExperience ~ filterBaseOnTechStackExperience:",
+        filterBaseOnTechStackExperience?.flat(Infinity)
+      );
+    }
+    if (value?.jobMinBaseSal) {
+      const fiterBaseOntheSalary = jobsTotal?.filter(
+        (job) =>
+          job?.minJdSalary?.toString()?.split("")[0] ===
+          value?.title?.toString()?.split("")[0]
+      );
+      console.log(
+        "🚀 ~ handleClick ~ fiterBaseOntheSalary:",
+        fiterBaseOntheSalary
+      );
+    }
+  };
+
   console.log("🚀 ~ InfiniteScrollwithFilters ~ getData:", getData);
+  console.log("🚀 ~ InfiniteScrollwithFilters ~ jobsTotal:", jobsTotal);
+  console.log(
+    "🚀 ~ InfiniteScrollwithFilters ~ minExpOfTheCandadate:",
+    minExpOfTheCandadate
+  );
 
   return (
     <>
@@ -75,26 +150,31 @@ const InfiniteScrollwithFilters = () => {
         justifyContent="center"
       >
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Min experience"} />
+          <FilterInputs name={"Min experience"} handleClick={handleClick} />
         </Grid>
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Company name"} />
+          <FilterInputs
+            name={"Company name"}
+            handleClick={handleClick}
+            setCompanyName={setCompanyName}
+            companyName={companyName}
+          />
         </Grid>
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Location"} />
+          <FilterInputs name={"Location"} handleClick={handleClick} />
         </Grid>
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Remote/on-site"} />
+          <FilterInputs name={"Remote/on-site"} handleClick={handleClick} />
         </Grid>
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Tech stack"} />
+          <FilterInputs name={"Tech stack"} handleClick={handleClick} />
         </Grid>
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Role"} />
+          <FilterInputs name={"Role"} handleClick={handleClick} />
         </Grid>
         <br />
         <Grid item xs={12} sm={3} md={3}>
-          <FilterInputs name={"Min base pay"} />
+          <FilterInputs name={"Min base pay"} handleClick={handleClick} />
         </Grid>
       </Grid>
       <br />
