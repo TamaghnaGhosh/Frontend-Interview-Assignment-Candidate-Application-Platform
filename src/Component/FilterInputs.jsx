@@ -1,4 +1,5 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
+import { memo } from 'react';
 
 // eslint-disable-next-line react/prop-types
 const FilterInputs = ({ name, handleClick, setCompanyName, companyName }) => {
@@ -180,4 +181,4 @@ const FilterInputs = ({ name, handleClick, setCompanyName, companyName }) => {
   );
 };
 
-export default FilterInputs;
+export default memo(FilterInputs);
