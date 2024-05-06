@@ -72,15 +72,6 @@ const InfiniteScrollwithFilters = () => {
     console.log("🚀 ~ handleClick ~ value:", value);
     const arrToObj = { ...value };
     console.log("🚀 ~ handleClick ~ arrToObj:", arrToObj);
-    // if (value?.["jobExperience"] || value?.["jobTypeid"]) {
-
-    // } else {
-    //   console.log("🚀 ~ InfiniteScrollwithFilters ~ companyName:", companyName);
-    //   const scroll = value?.map((info) =>
-    //     jobsTotal?.filter((job) => ((job?.jobRole === info?.title && job?.minExp === minExpOfTheCandadate)))
-    //   );
-    //   console.log("🚀 ~ scroll ~ scroll:", scroll?.flat(Infinity));
-    // }
     if (value?.jobExperience) {
       setMinExpOfTheCandadate(value?.title);
       const fiterBaseOntheExp = jobsTotal?.filter(
@@ -134,12 +125,9 @@ const InfiniteScrollwithFilters = () => {
     }
   };
 
-  console.log("🚀 ~ InfiniteScrollwithFilters ~ getData:", getData);
-  console.log("🚀 ~ InfiniteScrollwithFilters ~ jobsTotal:", jobsTotal);
-  console.log(
-    "🚀 ~ InfiniteScrollwithFilters ~ minExpOfTheCandadate:",
-    minExpOfTheCandadate
-  );
+  // console.log("🚀 ~ InfiniteScrollwithFilters ~ getData:", getData);
+  // console.log("🚀 ~ InfiniteScrollwithFilters ~ jobsTotal:", jobsTotal);
+  // console.log("🚀 ~ InfiniteScrollwithFilters ~ minExpOfTheCandadate:",minExpOfTheCandadate);
 
   return (
     <>
