@@ -20,11 +20,15 @@ const InfiniteScrollwithFilters = () => {
   const classes = useStyles();
   const jobsTotal = useSelector((store) => store?.jobinfo?.jobsTotal);
   const jobs = useSelector((store) => store?.jobinfo?.jobs);
-  const [getData, setGetData] = useState(jobs);
+  const [getData, setGetData] = useState([]);
   const [limit, setLimit] = useState(4);
   const [hasMore, setHasMore] = useState(true);
   const [companyName, setCompanyName] = useState("");
   const [minExpOfTheCandadate, setMinExpOfTheCandadate] = useState(null);
+  const [location, setLocation] = useState([]);
+  const [jobType, setJobType] = useState(null);
+  const [jobBasedByRole, setJobBasedByRole] = useState([]);
+  const [jobBasedOnSalary, setJobBasedOnSalary] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -71,26 +75,33 @@ const InfiniteScrollwithFilters = () => {
   const handleClick = (value) => {
     console.log("🚀 ~ handleClick ~ value:", value);
     const arrToObj = { ...value };
-    console.log("🚀 ~ handleClick ~ arrToObj:", arrToObj);
     if (value?.jobExperience) {
-      setMinExpOfTheCandadate(value?.title);
-      const fiterBaseOntheExp = jobsTotal?.filter(
-        (job) => job?.minExp === value?.title
-      );
-      console.log("🚀 ~ handleClick ~ fiterBaseOntheExp:", fiterBaseOntheExp);
-    }
-    if (arrToObj?.[0]?.jobLocationid) {
-      const fiterBaseOntheJobLocation = value?.map((info) =>
-        jobsTotal?.filter(
+      if (minExpOfTheCandadate === null && location?.length === 0 && jobType === null && jobBasedByRole?.length === 0 && jobBasedOnSalary?.length === 0) {
+        setMinExpOfTheCandadate(value?.title);
+        const fiterBaseOntheExp = jobsTotal?.filter(
+          (job) => job?.minExp === value?.title
+        );
+        console.log("🚀 ~ handleClick ~ fiterBaseOntheExp:", fiterBaseOntheExp);
+      }else if(minExpOfTheCandadate){
+        setMinExpOfTheCandadate(value?.title);
+        const fiterBaseOntheCandiadateOfExp = jobsTotal?.filter(
+          (job) => job?.minExp === value?.title
+        );
+        console.log("🚀 ~ handleClick ~ fiterBaseOntheCandiadateOfExp:", fiterBaseOntheCandiadateOfExp);
+      }
+    } else if (arrToObj?.[0]?.jobLocationid) {
+      const fiterBaseOntheJobLocation = value?.map((info) => {
+        setLocation((pre) => [...new Set([...pre, info.title])]);
+        return jobsTotal?.filter(
           (job) => job?.location.toLowerCase() === info?.title.toLowerCase()
-        )
-      );
+        );
+      });
       console.log(
         "🚀 ~ fiterBaseOntheJobLocation ~ fiterBaseOntheJobLocation:",
         fiterBaseOntheJobLocation?.flat(Infinity)
       );
-    }
-    if (arrToObj?.[0]?.jobTypeid) {
+    } else if (value?.jobTypeid) {
+      setJobType(value?.title);
       const fiterBaseOntheJobType = jobsTotal?.filter(
         (job) => job?.location.toLowerCase() === value?.title.toLowerCase()
       );
@@ -103,16 +114,17 @@ const InfiniteScrollwithFilters = () => {
     //   const filterBaseOnTechStackExperience = value?.map((info) =>jobsTotal?.filter((job) => job?.jobRole === info?.title));
     //   console.log("🚀 ~ filterBaseOnTechStackExperience ~ filterBaseOnTechStackExperience:", filterBaseOnTechStackExperience?.flat(Infinity));
     // }
-    if (arrToObj?.[0]?.jobTitleID) {
-      const filterBaseOnTechStackExperience = value?.map((info) =>
-        jobsTotal?.filter((job) => job?.jobRole === info?.title)
-      );
+    else if (arrToObj?.[0]?.jobTitleID) {
+      const filterBaseOnByRole = value?.map((info) => {
+        setJobBasedByRole((pre) => [...new Set([...pre, info.title])]);
+        return jobsTotal?.filter((job) => job?.jobRole === info?.title);
+      });
       console.log(
-        "🚀 ~ filterBaseOnTechStackExperience ~ filterBaseOnTechStackExperience:",
-        filterBaseOnTechStackExperience?.flat(Infinity)
+        "🚀 ~ filterBaseOnByRole ~ filterBaseOnByRole:",
+        filterBaseOnByRole?.flat(Infinity)
       );
-    }
-    if (value?.jobMinBaseSal) {
+    } else if (value?.jobMinBaseSal) {
+      setJobBasedOnSalary(value?.title?.toString()?.split("")[0]);
       const fiterBaseOntheSalary = jobsTotal?.filter(
         (job) =>
           job?.minJdSalary?.toString()?.split("")[0] ===
@@ -124,10 +136,23 @@ const InfiniteScrollwithFilters = () => {
       );
     }
   };
+  console.log(
+    "🚀 ~ InfiniteScrollwithFilters ~ minExpOfTheCandadate:",
+    minExpOfTheCandadate
+  );
+  console.log("🚀 ~ InfiniteScrollwithFilters ~ location:", location);
+  console.log("🚀 ~ InfiniteScrollwithFilters ~ jobType:", jobType);
+  console.log(
+    "🚀 ~ InfiniteScrollwithFilters ~ jobBasedByRole:",
+    jobBasedByRole
+  );
+  console.log(
+    "🚀 ~ InfiniteScrollwithFilters ~ jobBasedOnSalary:",
+    jobBasedOnSalary
+  );
 
   // console.log("🚀 ~ InfiniteScrollwithFilters ~ getData:", getData);
   // console.log("🚀 ~ InfiniteScrollwithFilters ~ jobsTotal:", jobsTotal);
-  // console.log("🚀 ~ InfiniteScrollwithFilters ~ minExpOfTheCandadate:",minExpOfTheCandadate);
 
   return (
     <>
