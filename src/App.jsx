@@ -9,6 +9,7 @@ const appRouter = createBrowserRouter([
     path: "/",
     element: <InfiniteScrollwithFilters />,
     children: [
+      
       // {
       //   path: "/search/:searchID",
       //   element: (
